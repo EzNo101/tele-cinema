@@ -1,12 +1,12 @@
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, relationship
 
 from src.infra.db.base import Base
+from src.infra.db.models.mixins import CreatedAtMixin, IdMixin
 
 
-class Movie(Base):
-    id: Mapped[int] = mapped_column(primary_key=True)
+class Movie(Base, CreatedAtMixin, IdMixin):
     title: Mapped[str]
-    image: Mapped[str]
+    poster_key: Mapped[str]
     duration: Mapped[int]
     genre: Mapped[str]
 

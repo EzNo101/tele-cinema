@@ -5,6 +5,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 
 from src.infra.db.base import Base
+from src.infra.db.models.mixins import CreatedAtMixin, IdMixin
 
 
 class BookingStatus(Enum):
@@ -13,8 +14,7 @@ class BookingStatus(Enum):
     CANCELLED = "cancelled"
 
 
-class Booking(Base):
-    id: Mapped[int] = mapped_column(primary_key=True)
+class Booking(Base, IdMixin, CreatedAtMixin):
     seat_id: Mapped[int] = mapped_column(
         ForeignKey(
             "seat.id",
