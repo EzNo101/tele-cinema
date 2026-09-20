@@ -14,6 +14,7 @@ class UnitOfWork:
         self.movie_repository: MovieRepository
         self.movie_session_repository: MovieSessionRepository
         self.seat_repository: SeatRepository
+        self.room_repository: RoomRepository
 
     async def __aenter__(self):
         self.session = AsyncSessionLocal()
@@ -22,6 +23,7 @@ class UnitOfWork:
         self.movie_repository = MovieRepository(self.session)
         self.movie_session_repository = MovieSessionRepository(self.session)
         self.seat_repository = SeatRepository(self.session)
+        self.room_repository = RoomRepository(self.session)
         return self
 
     async def __aexit__(
