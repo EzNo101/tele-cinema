@@ -15,6 +15,9 @@ class BookingStatus(Enum):
 
 
 class Booking(Base, IdMixin, CreatedAtMixin, UpdatedAtMixin):
+    session_id: Mapped[int] = mapped_column(
+        ForeignKey("moviesession.id", ondelete="CASCADE")
+    )
     seat_id: Mapped[int] = mapped_column(
         ForeignKey(
             "seat.id",
@@ -23,7 +26,7 @@ class Booking(Base, IdMixin, CreatedAtMixin, UpdatedAtMixin):
     )
     user_id: Mapped[int] = mapped_column(
         ForeignKey(
-            "app_user.id",
+            "appuser.id",
             ondelete="CASCADE",
         )
     )

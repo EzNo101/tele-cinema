@@ -28,3 +28,19 @@ class MovieSessionNotFoundException(Exception):
 
 class MovieSessionAlreadyExistsException(Exception):
     """Exception raised when a movie session already exists in the database."""
+
+
+class SeatNotFoundException(Exception):
+    """Exception raised when a seat is not found in the database."""
+
+
+class SeatAlreadyExistsException(Exception):
+    """Exception raised when a seat is already exists in the database."""
+
+
+class BookingNotFoundException(Exception):
+    """Exception raised when a booking is not found in the database."""
+
+
+class BookingAlreadyExistsException(Exception):
+    """Exception raised when a booking is already exists in the database."""
