@@ -9,47 +9,45 @@ from src.infra.db.uow import UnitOfWork
 
 
 class BookingService:
-    async def get_by_id(self, booking_id: int, uow: UnitOfWork) -> Booking:
-        async with uow:
-            booking = await uow.booking_repository.get_by_id(booking_id)
+    def __init__(self, uow: UnitOfWork):
+        self.uow = uow
+
+    async def get_by_id(self, booking_id: int) -> Booking:
+        async with self.uow:
+            booking = await self.uow.booking_repository.get_by_id(booking_id)
             if not booking:
                 raise BookingNotFoundException(
                     f"Booking not found with id: {booking_id}"
                 )
             return booking
 
-    async def get_by_user_id(self, user_id: int, uow: UnitOfWork) -> list[Booking]:
-        async with uow:
-            bookings = await uow.booking_repository.get_by_user_id(user_id)
+    async def get_by_user_id(self, user_id: int) -> list[Booking]:
+        async with self.uow:
+            bookings = await self.uow.booking_repository.get_by_user_id(user_id)
             return bookings
 
-    async def get_all(self, uow: UnitOfWork) -> list[Booking]:
-        async with uow:
-            bookings = await uow.booking_repository.get_all()
+    async def get_all(self) -> list[Booking]:
+        async with self.uow:
+            bookings = await self.uow.booking_repository.get_all()
             return bookings
 
-    async def get_by_seat_id(self, seat_id: int, uow: UnitOfWork) -> list[Booking]:
-        async with uow:
-            bookings = await uow.booking_repository.get_by_seat_id(seat_id)
+    async def get_by_seat_id(self, seat_id: int) -> list[Booking]:
+        async with self.uow:
+            bookings = await self.uow.booking_repository.get_by_seat_id(seat_id)
             return bookings
 
-    async def create(
-        self,
-        seat_id: int,
-        user_id: int,
-        uow: UnitOfWork,
-    ) -> Booking:
-        async with uow:
-            existing_booking = await uow.booking_repository.get_by_seat_id(seat_id)
+    async def create(self, seat_id: int, user_id: int) -> Booking:
+        async with self.uow:
+            existing_booking = await self.uow.booking_repository.get_by_seat_id(seat_id)
             if existing_booking:
                 raise BookingAlreadyExistsException(
                     f"Booking already exists for seat {seat_id}"
                 )
-            seat = await uow.seat_repository.get_by_id(seat_id)
+            seat = await self.uow.seat_repository.get_by_id(seat_id)
             if not seat:
                 raise SeatNotFoundException(f"Seat not found with id: {seat_id}")
 
-            session = await uow.movie_session_repository.get_by_id(seat.session_id)
+            session = await self.uow.movie_session_repository.get_by_id(seat.session_id)
             if not session:
                 raise MovieSessionNotFoundException(
                     f"Session not found with id: {seat.session_id}"
@@ -61,14 +59,14 @@ class BookingService:
                 user_id=user_id,
                 price_stars=session.price_stars,
             )
-            await uow.booking_repository.create(booking)
+            await self.uow.booking_repository.create(booking)
             return booking
 
-    async def delete(self, booking_id: int, uow: UnitOfWork) -> None:
-        async with uow:
-            booking = await uow.booking_repository.get_by_id(booking_id)
+    async def delete(self, booking_id: int) -> None:
+        async with self.uow:
+            booking = await self.uow.booking_repository.get_by_id(booking_id)
             if not booking:
                 raise BookingNotFoundException(
                     f"Booking not found with id: {booking_id}"
                 )
-            await uow.booking_repository.delete(booking)
+            await self.uow.booking_repository.delete(booking)
