@@ -6,7 +6,7 @@ from src.infra.db.models.mixins import IdMixin
 
 
 class Seat(Base, IdMixin):
-    __table_args__ = (UniqueConstraint("session_id", "row", "number"),)
+    __table_args__ = (UniqueConstraint("session_id", "row", "column"),)
     session_id: Mapped[int] = mapped_column(
         ForeignKey(
             "moviesession.id",
@@ -14,7 +14,7 @@ class Seat(Base, IdMixin):
         )
     )
     row: Mapped[int]
-    number: Mapped[int]
+    column: Mapped[int]
 
     bookings = relationship(
         "Booking",

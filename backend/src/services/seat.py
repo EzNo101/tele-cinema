@@ -17,19 +17,19 @@ class SeatService:
                 raise SeatNotFoundException(f"Seat not found with id: {seat_id}")
             return seat
 
-    async def get_by_row_and_number(
+    async def get_by_row_and_column(
         self,
         session_id: int,
         row: int,
-        number: int,
+        column: int,
     ) -> Seat:
         async with self.uow:
-            seat = await self.uow.seat_repository.get_by_row_and_number(
-                session_id, row, number
+            seat = await self.uow.seat_repository.get_by_row_and_column(
+                session_id, row, column
             )
             if not seat:
                 raise SeatNotFoundException(
-                    f"Seat not found in session {session_id} at row {row}, number {number}"
+                    f"Seat not found in session {session_id} at row {row}, column {column}"
                 )
             return seat
 
@@ -47,20 +47,20 @@ class SeatService:
         self,
         session_id: int,
         row: int,
-        number: int,
+        column: int,
     ) -> Seat:
         async with self.uow:
-            existing_seat = await self.uow.seat_repository.get_by_row_and_number(
+            existing_seat = await self.uow.seat_repository.get_by_row_and_column(
                 session_id,
                 row,
-                number,
+                column,
             )
             if existing_seat:
                 raise SeatAlreadyExistsException(
-                    f"Seat already exists in session {session_id} at row {row}, number {number}"
+                    f"Seat already exists in session {session_id} at row {row}, column {column}"
                 )
 
-            new_seat = Seat(session_id=session_id, row=row, number=number)
+            new_seat = Seat(session_id=session_id, row=row, column=column)
             await self.uow.seat_repository.create(new_seat)
             return new_seat
 

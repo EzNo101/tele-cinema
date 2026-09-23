@@ -9,14 +9,14 @@ class SeatRepository(BaseRepository[Seat]):
     def __init__(self, session: AsyncSession):
         super().__init__(session, Seat)
 
-    async def get_by_row_and_number(
-        self, session_id: int, row: int, number: int
+    async def get_by_row_and_column(
+        self, session_id: int, row: int, column: int
     ) -> Seat | None:
         result = await self.session.execute(
             select(Seat).where(
                 Seat.session_id == session_id,
                 Seat.row == row,
-                Seat.number == number,
+                Seat.column == column,
             )
         )
         return result.scalars().first()

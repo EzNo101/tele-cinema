@@ -16,3 +16,7 @@ class BookingResponse(BaseModel):
     seat_id: int = Field(..., description="ID of the seat")
     price_stars: int = Field(..., description="Price of the booking in telegram stars")
     status: BookingStatus = Field(..., description="Status of the booking")
+
+
+class BookingUpdateStatus(BaseModel):
+    status: BookingStatus = Field(..., description="New status of the booking")

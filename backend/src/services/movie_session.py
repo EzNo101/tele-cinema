@@ -27,6 +27,11 @@ class MovieSessionService:
             sessions = await self.uow.movie_session_repository.get_by_movie_id(movie_id)
             return sessions
 
+    async def get_by_room_id(self, room_id: int) -> list[MovieSession]:
+        async with self.uow:
+            sessions = await self.uow.movie_session_repository.get_by_room_id(room_id)
+            return sessions
+
     async def create(
         self,
         movie_id: int,

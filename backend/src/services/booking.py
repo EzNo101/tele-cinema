@@ -3,8 +3,9 @@ from src.core.exceptions import (
     BookingNotFoundException,
     MovieSessionNotFoundException,
     SeatNotFoundException,
+    UserNotFoundException,
 )
-from src.infra.db.models import Booking
+from src.infra.db.models import Booking, BookingStatus
 from src.infra.db.uow import UnitOfWork
 
 
@@ -47,6 +48,10 @@ class BookingService:
             if not seat:
                 raise SeatNotFoundException(f"Seat not found with id: {seat_id}")
 
+            user = await self.uow.app_user_repository.get_by_id(user_id)
+            if not user:
+                raise UserNotFoundException(f"User not found with id: {user_id}")
+
             session = await self.uow.movie_session_repository.get_by_id(seat.session_id)
             if not session:
                 raise MovieSessionNotFoundException(
@@ -61,6 +66,21 @@ class BookingService:
             )
             await self.uow.booking_repository.create(booking)
             return booking
+
+    async def update_status(
+        self,
+        booking_id: int,
+        status: BookingStatus,
+    ) -> Booking:
+        async with self.uow:
+            updated_booking = await self.uow.booking_repository.update_status(
+                booking_id, status
+            )
+            if not updated_booking:
+                raise BookingNotFoundException(
+                    f"Booking not found with id: {booking_id}"
+                )
+            return updated_booking
 
     async def delete(self, booking_id: int) -> None:
         async with self.uow:

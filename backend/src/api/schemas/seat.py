@@ -4,7 +4,7 @@ from pydantic import BaseModel, ConfigDict, Field
 class SeatCreate(BaseModel):
     session_id: int = Field(..., description="ID of the movie session")
     row: int = Field(..., description="Row number of the seat")
-    number: int = Field(..., description="Seat number in the row")
+    column: int = Field(..., description="Column number of the seat")
 
 
 class SeatResponse(BaseModel):
@@ -12,4 +12,4 @@ class SeatResponse(BaseModel):
     id: int = Field(..., description="ID of the seat")
     session_id: int = Field(..., description="ID of the movie session")
     row: int = Field(..., description="Row number of the seat")
-    number: int = Field(..., description="Seat number in the row")
+    column: int = Field(..., description="Column number of the seat")

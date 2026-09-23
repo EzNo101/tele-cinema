@@ -16,7 +16,7 @@ class MovieRepository(BaseRepository[Movie]):
         )
         return result.scalar_one_or_none()
 
-    async def get_all_sessions(self, movie_id: int) -> Movie | None:
+    async def get_by_id_with_sessions(self, movie_id: int) -> Movie | None:
         result = await self.session.execute(
             select(Movie)
             .options(selectinload(Movie.sessions))

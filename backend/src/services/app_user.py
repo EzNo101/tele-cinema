@@ -35,7 +35,7 @@ class AppUserService:
             users = await self.uow.app_user_repository.get_all()
             return users
 
-    async def create(self, telegram_id: int, username: str) -> AppUser:
+    async def create(self, telegram_id: int, username: str | None) -> AppUser:
         async with self.uow:
             existing_user = await self.uow.app_user_repository.get_by_telegram_id(
                 telegram_id
